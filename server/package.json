@@ -1,0 +1,27 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:studio": "npx prisma studio"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "prisma": "^6.7.0",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "@hono/zod-validator": "^0.5.0",
+    "@prisma/client": "^6.7.0",
+    "dotenv": "^16.5.0",
+    "hono": "^4.6.8",
+    "zod": "^3.24.3"
+  }
+}
