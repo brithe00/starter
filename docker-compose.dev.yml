@@ -7,7 +7,7 @@ services:
       - "5173:5173"
     volumes:
       - ./client:/app
-      - /app/node_modules
+      - client_node_modules:/app/node_modules
     environment:
       - VITE_API_URL=http://localhost:8000
     depends_on:
@@ -60,4 +60,5 @@ networks:
     driver: bridge
 
 volumes:
+  client_node_modules:
   postgres-data:
