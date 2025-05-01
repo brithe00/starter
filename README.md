@@ -19,24 +19,28 @@ This is a modern full stack application starter template with React (client) and
 - **🐘 PostgreSQL** database
 - **📝 Zod** for API validation
 
-## 📁 Project Structure
+## 🔐 Environment Variables
+
+### Server (.env file)
+
+Create a `.env` file in the server directory with these variables:
 
 ```
-├── client/            # 🎭 React frontend application
-│   ├── public/        # 📂 Static assets
-│   ├── src/           # 💻 Source code
-│   │   ├── components/# 🧩 Reusable UI components
-│   │   ├── lib/       # 🔧 Utility functions
-│   │   └── routes/    # 🛣️ Application routes
-├── server/            # 🖥️ Hono.js backend application
-│   ├── prisma/        # 🔌 Prisma schema and migrations
-│   └── src/           # 🧠 Server source code
-│       ├── controllers/# 🎮 Request handlers
-│       ├── middlewares/# 🛡️ Custom middlewares
-│       ├── routes/    # 🛣️ API routes
-│       └── services/  # 📊 Business logic
-├── docker-compose.dev.yml # 🐳 Dev environment configuration
+NODE_ENV=development
+PORT=8000
+DATABASE_URL=postgresql://postgres:postgres@db:5432/app?schema=public
+CORS_ORIGIN=http://localhost:5173
 ```
+
+### Client (.env file)
+
+Create a `.env` file in the client directory:
+
+```
+VITE_API_URL=http://localhost:8000
+```
+
+> 🔒 **Never commit your actual .env files to version control!** Use .env.example files as templates.
 
 ## 🚀 Getting Started
 
@@ -54,7 +58,19 @@ This is a modern full stack application starter template with React (client) and
    cd starter
    ```
 
-2. Start the development environment:
+2. Set up environment variables:
+
+   ```bash
+   # For server
+   cp server/.env.example server/.env
+   # Edit server/.env as needed
+
+   # For client (if needed)
+   touch client/.env
+   echo "VITE_API_URL=http://localhost:8000" > client/.env
+   ```
+
+3. Start the development environment:
    ```bash
    docker-compose -f docker-compose.dev.yml up
    ```
@@ -84,6 +100,6 @@ This will:
 ## 📝 Development Notes
 
 - 🔑 All client-side environment variables should be prefixed with `VITE_` for Vite to expose them
-- 🔄 Server automatically connects to the database container
+- 🔄 Server environment variables are validated using Zod in the server/src/config/env.ts file
 - 🛠️ The setup includes development tools like React Query Devtools and TanStack Router Devtools
 - 🔍 Use Prisma Studio for database exploration (`npm run prisma:studio` in the server directory)
