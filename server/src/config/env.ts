@@ -9,6 +9,7 @@ const envSchema = z.object({
     .default("development"),
   PORT: z.string().default("8000"),
   DATABASE_URL: z.string(),
+  CORS_ORIGIN: z.string(),
 });
 
 const result = envSchema.safeParse(process.env);

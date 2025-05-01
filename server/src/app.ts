@@ -4,12 +4,19 @@ import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
 import apiRoutes from "./routes";
 import { errorMiddleware } from "./middlewares/error.middleware";
+import { env } from "./config/env";
 
 const app = new Hono();
 
 app.use("*", logger());
 app.use("*", prettyJSON());
-app.use("*", cors());
+app.use(
+  "/*",
+  cors({
+    origin: env.CORS_ORIGIN || "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use("*", errorMiddleware);
 
 app.route("/api", apiRoutes);
