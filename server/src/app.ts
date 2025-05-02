@@ -5,6 +5,7 @@ import { prettyJSON } from "hono/pretty-json";
 import apiRoutes from "./routes";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { env } from "./config/env";
+import { auth } from "./lib/auth";
 
 const app = new Hono();
 
@@ -18,6 +19,8 @@ app.use(
   })
 );
 app.use("*", errorMiddleware);
+
+app.on(["POST", "GET"], "/api/auth/**", (c) => auth.handler(c.req.raw));
 
 app.route("/api", apiRoutes);
 
