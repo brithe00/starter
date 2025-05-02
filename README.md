@@ -18,26 +18,42 @@ This is a modern full stack application starter template with React (client) and
 - **🔌 Prisma** as the ORM
 - **🐘 PostgreSQL** database
 - **📝 Zod** for API validation
+- **🔑 Better Auth** for authentication
 
 ## 🔐 Environment Variables
 
-### Server (.env file)
+### Server (.env.server file)
 
-Create a `.env` file in the server directory with these variables:
+Create a `.env.server` file in the server directory with these variables:
 
 ```
 NODE_ENV=development
 PORT=8000
 DATABASE_URL=postgresql://postgres:postgres@db:5432/app?schema=public
 CORS_ORIGIN=http://localhost:5173
+BETTER_AUTH_SECRET=your-secret-key
+BETTER_AUTH_URL=http://localhost:8000
+DISCORD_CLIENT_ID=your-discord-client-id
+DISCORD_CLIENT_SECRET=your-discord-client-secret
 ```
 
-### Client (.env file)
+### Client (.env.client file)
 
-Create a `.env` file in the client directory:
+Create a `.env.client` file in the client directory:
 
 ```
 VITE_API_URL=http://localhost:8000
+VITE_CLIENT_URL=http://localhost:5173
+```
+
+### Database (.env.db file)
+
+Create a `.env.db` file in the root directory:
+
+```
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=app
 ```
 
 > 🔒 **Never commit your actual .env files to version control!** Use .env.example files as templates.
@@ -61,13 +77,18 @@ VITE_API_URL=http://localhost:8000
 2. Set up environment variables:
 
    ```bash
-   # For server
-   cp server/.env.example server/.env
-   # Edit server/.env as needed
+   # For database
+   cp .env.db.example .env.db
+   # Edit .env.db as needed
 
-   # For client (if needed)
-   touch client/.env
-   echo "VITE_API_URL=http://localhost:8000" > client/.env
+   # For server
+   cp server/.env.example server/.env.server
+   # Edit server/.env.server as needed
+
+   # For client
+   touch client/.env.client
+   echo "VITE_API_URL=http://localhost:8000" > client/.env.client
+   echo "VITE_CLIENT_URL=http://localhost:5173" >> client/.env.client
    ```
 
 3. Start the development environment:
@@ -80,11 +101,21 @@ This will:
 - 🎭 Start the React client on port 5173
 - 🔥 Start the Hono.js server on port 8000
 - 🐘 Start a PostgreSQL database on port 5432
+- 🔍 Start Prisma Studio on port 5555
 
 ### 🌐 Accessing the Application
 
 - 🎨 Frontend: http://localhost:5173
 - 🔌 Backend API: http://localhost:8000
+- 📊 Prisma Studio: http://localhost:5555
+
+## 🔐 Authentication
+
+This template includes Better Auth for authentication with:
+
+- 🔑 Discord OAuth integration
+- 👤 User session management
+- 🔒 Secure authentication flow
 
 ## ✨ Features
 
@@ -96,10 +127,13 @@ This will:
 - 🔒 **API validation** with Zod
 - 🎭 **Modern UI components** with Shadcn UI
 - 📱 **Responsive design** with Tailwind CSS
+- 🔐 **Authentication** with Better Auth
+- 🔌 **Social login** with Discord
 
 ## 📝 Development Notes
 
 - 🔑 All client-side environment variables should be prefixed with `VITE_` for Vite to expose them
 - 🔄 Server environment variables are validated using Zod in the server/src/config/env.ts file
 - 🛠️ The setup includes development tools like React Query Devtools and TanStack Router Devtools
-- 🔍 Use Prisma Studio for database exploration (`npm run prisma:studio` in the server directory)
+- 🔍 Use Prisma Studio for database exploration (accessible at http://localhost:5555)
+- 🔐 Authentication is handled through Better Auth with Discord integration
