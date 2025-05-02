@@ -16,4 +16,5 @@ export const auth = betterAuth({
       clientSecret: env.DISCORD_CLIENT_SECRET,
     },
   },
+  trustedOrigins: [env.CORS_ORIGIN],
 });
