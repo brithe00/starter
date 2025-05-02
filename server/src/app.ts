@@ -49,4 +49,3 @@ app.notFound((c) => c.json({ message: "Not Found" }, 404));
 app.use("*", errorMiddleware);
 
 export default app;
-export type AppType = typeof app;
