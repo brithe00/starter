@@ -17,11 +17,4 @@ export const auth = betterAuth({
     },
   },
   trustedOrigins: [env.CORS_ORIGIN],
-  advanced: {
-    defaultCookieAttributes: {
-      sameSite: "none",
-      secure: true,
-      partitioned: true,
-    },
-  },
 });
