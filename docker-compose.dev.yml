@@ -7,9 +7,9 @@ services:
       - "5173:5173"
     volumes:
       - ./client:/app
-      - client_node_modules:/app/node_modules
-    environment:
-      - VITE_API_URL=http://localhost:8000
+      - /app/node_modules
+    env_file:
+      - ./client/.env.client
     depends_on:
       - server
     networks:
@@ -25,10 +25,8 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules
-      - /app/prisma/generated
-    environment:
-      - NODE_ENV=development
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/app?schema=public
+    env_file:
+      - ./server/.env.server
     depends_on:
       db:
         condition: service_healthy
@@ -36,14 +34,30 @@ services:
       - app-network
     restart: unless-stopped
 
+  prisma-studio:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    env_file:
+      - ./server/.env.server
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+    command: npx prisma studio --hostname 0.0.0.0
+
   db:
     image: postgres:14-alpine
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=app
+    env_file:
+      - .env.db
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
@@ -60,5 +74,4 @@ networks:
     driver: bridge
 
 volumes:
-  client_node_modules:
   postgres-data:

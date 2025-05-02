@@ -7,5 +7,7 @@ coverage
 .vscode
 .idea
 .env.*
-!.env.example
+!.env.client.example
+!.env.server.example
+!.env.db.example
 generated
