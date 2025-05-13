@@ -51,7 +51,8 @@ function HomeComponent() {
                 await authClient.signIn.social({
                   provider: "discord",
                   callbackURL:
-                    import.meta.env.VITE_CLIENT_URL + search.returnTo,
+                    import.meta.env.VITE_CLIENT_URL +
+                    (search.returnTo || "/dashboard"),
                 })
               }
               className="w-full sm:w-auto"
