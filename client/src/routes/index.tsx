@@ -1,5 +1,5 @@
 import { authClient } from "@/lib/auth-client";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,18 +12,25 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { zodValidator } from "@tanstack/zod-adapter";
+import { z } from "zod";
+
+const homeSearchSchema = z.object({
+  returnTo: z.string().optional(),
+});
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
+  validateSearch: zodValidator(homeSearchSchema),
 });
 
 function HomeComponent() {
   const session = authClient.useSession();
+  const search = useSearch({ from: "/" });
 
   return (
     <div className="container mx-auto p-6 max-w-3xl">
       <h1 className="text-3xl font-bold mb-4">Welcome to our Blog!</h1>
-
       {session.isPending ? (
         <Card className="w-full">
           <CardContent className="pt-6 flex justify-center items-center h-40">
@@ -43,7 +50,8 @@ function HomeComponent() {
               onClick={async () =>
                 await authClient.signIn.social({
                   provider: "discord",
-                  callbackURL: import.meta.env.VITE_CLIENT_URL,
+                  callbackURL:
+                    import.meta.env.VITE_CLIENT_URL + search.returnTo,
                 })
               }
               className="w-full sm:w-auto"
