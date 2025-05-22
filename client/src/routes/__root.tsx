@@ -1,35 +1,54 @@
 import {
   createRootRouteWithContext,
   Outlet,
-  Link,
+  // Link, // Link is no longer used directly here
 } from "@tanstack/react-router";
 import { RouterContext } from "../router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { MainAppLayout } from '@/components/layouts/MainAppLayout'; // New import
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  loader: async ({ context }) => {
+    // Define the query key for session data.
+    // In a larger application, this might be imported from a shared constants file.
+    const sessionQueryKey = ['auth', 'session'];
+
+    try {
+      // Use ensureQueryData to fetch the session data if it's not already cached,
+      // or return the cached data if it is.
+      // The 'auth' and 'queryClient' are available on the context as defined in router.tsx.
+      const sessionData = await context.queryClient.ensureQueryData({
+        queryKey: sessionQueryKey,
+        queryFn: async () => {
+          try {
+            // Attempt to get the current session using the auth client.
+            const session = await context.auth.getSession();
+            return session;
+          } catch (error) {
+            // If getSession() fails (e.g., user not authenticated, network error),
+            // log the error and return null to indicate no active session.
+            console.error("Root loader - Failed to fetch session in queryFn:", error);
+            return null;
+          }
+        },
+      });
+      return sessionData;
+    } catch (error) {
+      // This catch block handles errors from ensureQueryData itself, which is less common
+      // for this setup but good practice to include.
+      console.error("Root loader - Error in ensureQueryData:", error);
+      // Return null if ensureQueryData fails, ensuring the app can still load.
+      return null;
+    }
+  },
   component: () => (
-    <div className="min-h-screen p-4 bg-gray-50">
-      <nav className="mb-6 pb-4 border-b">
-        <ul className="flex space-x-6">
-          <li>
-            <Link
-              to="/"
-              className="text-blue-600 hover:text-blue-800 [&.active]:font-bold"
-            >
-              Home
-            </Link>
-          </li>
-        </ul>
-      </nav>
-
-      <main className="container mx-auto">
-        <Outlet />
-      </main>
-
+    <> {/* Use a fragment as DevTools are outside MainAppLayout at the same level */}
+      <MainAppLayout /> {/* This now renders the navbar and its own Outlet for routes */}
+      {/* Outlet is no longer needed here as MainAppLayout has its own */}
       <TanStackRouterDevtools initialIsOpen={false} />
       <ReactQueryDevtools initialIsOpen={false} />
-    </div>
+    </>
   ),
   errorComponent: ({ error }) => {
     return (
